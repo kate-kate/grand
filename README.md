@@ -6,7 +6,7 @@ tournament project
 how to install
 
 1. run migrations
-пше 
+
 2. run ```grand/generate-pairs``` command
 
 3. then run ```grand/generate-matches``` command
