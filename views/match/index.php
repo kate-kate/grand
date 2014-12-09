@@ -28,8 +28,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     /**
                      * @var Match $data
                      */
-                    return $data->pairOne->name;
-                }
+                    $content = $data->pairOne->name;
+                    if ($data->status == Match::MATCH_STATUS_PLAYED) {
+                        $content = Html::tag('span', $content,
+                            ['class' => $data->pairOne->id == $data->winner->id ? 'winner' : 'looser']);
+                    }
+                    return $content;
+                },
+                'format' => 'raw'
             ],
             [
                 'attribute' => 'pair_id_2',
@@ -38,15 +44,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     /**
                      * @var Match $data
                      */
-                    return $data->pairTwo->name;
-                }
+                    $content = $data->pairTwo->name;
+                    if ($data->status == Match::MATCH_STATUS_PLAYED) {
+                        $content = Html::tag('span', $content,
+                            ['class' => $data->pairTwo->id == $data->winner->id ? 'winner' : 'looser']);
+                    }
+                    return $content;
+                },
+                'format' => 'raw'
             ],
             [
-                'attribute' => 'winner_id',
-                'label' => 'Winner',
+                'attribute' => 'score',
                 'value' => function ($data) {
-                    if ($data->winner) {
-                        return $data->winner->name;
+                    /**
+                     * @var Match $data
+                     */
+                    if ($data->status == Match::MATCH_STATUS_PLAYED) {
+                        if ($data->winner_id == $data->pair_id_1) {
+                            $content = $data->winner_score . ' : ' . $data->looser_score;
+                        } else {
+                            $content = $data->looser_score . ' : ' . $data->winner_score;
+                        }
+                        return $content;
                     }
                 }
             ],

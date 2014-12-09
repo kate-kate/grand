@@ -44,6 +44,7 @@ $config = [
             'enableStrictParsing' => true,
             'rules' => [
                 '<controller>/<action>' => '<controller>/<action>',
+                '/' => 'site/index'
             ],
         ],
     ],

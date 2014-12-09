@@ -55,7 +55,7 @@ class MatchSearch extends Match
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
-        if ($this->status == Match::MATCH_STATUS_NOT_PLAYED) {
+        if ($this->status == Match::MATCH_STATUS_NOT_PLAYED && $this->players) {
             $allPlayers = array_keys($this->getPlayersList());
             $cantPlay = array_diff($allPlayers, $this->players);
             $pairs = (new Query())->select('id')->from('pair')

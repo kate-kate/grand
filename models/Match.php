@@ -199,4 +199,18 @@ class Match extends \yii\db\ActiveRecord
             $payment->match_id = $this->id;
         }
     }
+
+    public function afterFind()
+    {
+        if ($this->status == self::MATCH_STATUS_PLAYED) {
+            if ($this->winner_id == $this->pair_id_1) {
+                $this->score[$this->pair_id_1] = $this->winner_score;
+                $this->score[$this->pair_id_2] = $this->looser_score;
+            } else {
+                $this->score[$this->pair_id_2] = $this->winner_score;
+                $this->score[$this->pair_id_1] = $this->looser_score;
+            }
+        }
+        parent::afterFind();
+    }
 }
