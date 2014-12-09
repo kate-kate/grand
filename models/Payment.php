@@ -93,17 +93,22 @@ class Payment extends \yii\db\ActiveRecord
 
     public function afterSave($insert, $changedAttributes)
     {
-        if ($this->status == self::PAYMENT_STATUS_BALANCE_FILL) {
-            $player = Participant::findOne($this->player_id);
-            $player->balance += $this->sum;
-            $player->save(false);
-        }
         if ($this->scenario == self::PAYMENT_SCENARIO_BALANCE_EDIT) {
-            if ($this->player_id !== $this->oldAttributes['player_id']) {
+            if ($this->player_id != $this->oldAttributes['player_id']) {
                 $oldPlayer = Participant::findOne($this->oldAttributes['player_id']);
                 $oldPlayer->balance -= $this->sum;
                 $oldPlayer->save(false);
+                $newPlayer = Participant::findOne($this->player_id);
+                $newPlayer->balance += $this->sum;
+                $newPlayer->save(false);
+            } elseif ($this->sum != $this->_oldAttributes['sum']) {
+                $this->player->balance = $this->player->balance - $this->_oldAttributes['sum'] + $this->sum;
+                $this->player->save(false);
             }
+        } else {
+            $player = Participant::findOne($this->player_id);
+            $player->balance += $this->sum;
+            $player->save(false);
         }
         parent::afterSave($insert, $changedAttributes);
     }

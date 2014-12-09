@@ -32,7 +32,7 @@ class Match extends \yii\db\ActiveRecord
     const MATCH_STATUS_BLOCKED = 'not-played';
     const MATCH_STATUS_STARTED = 'started';
 
-    const MATCH_BANK = 5;
+    const MATCH_BANK = 500;
 
     public $score;
 
@@ -183,5 +183,23 @@ class Match extends \yii\db\ActiveRecord
             }
         }
         return parent::beforeSave($insert);
+    }
+
+    public function makeBet()
+    {
+        $players = [];
+        $players[] = $this->pairOne->participantOne;
+        $players[] = $this->pairOne->participantTwo;
+        $players[] = $this->pairTwo->participantOne;
+        $players[] = $this->pairTwo->participantTwo;
+        foreach ($players as $player) {
+            if ($player->balance) {
+                $payment = new Payment();
+                $payment->status = Payment::PAYMENT_STATUS_BET;
+                $payment->sum = '-' . self::MATCH_BANK;
+                $payment->player_id = $player->id;
+                $payment->match_id = $this->id;
+            }
+        }
     }
 }
