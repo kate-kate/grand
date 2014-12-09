@@ -9,7 +9,7 @@ use yii\console\Controller;
 class GrandController extends Controller
 {
 
-    public function actionGeneratePairsAndMatches ()
+    public function actionGeneratePairs ()
     {
         Match::deleteAll();
         Pair::deleteAll();
