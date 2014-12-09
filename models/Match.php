@@ -29,8 +29,7 @@ class Match extends \yii\db\ActiveRecord
 {
     const MATCH_STATUS_NOT_PLAYED = 'not-played';
     const MATCH_STATUS_PLAYED = 'played';
-    const MATCH_STATUS_BLOCKED = 'not-played';
-    const MATCH_STATUS_STARTED = 'started';
+    const MATCH_STATUS_BLOCKED = 'blocked';
 
     const MATCH_BANK = 500;
 
@@ -193,13 +192,11 @@ class Match extends \yii\db\ActiveRecord
         $players[] = $this->pairTwo->participantOne;
         $players[] = $this->pairTwo->participantTwo;
         foreach ($players as $player) {
-            if ($player->balance) {
-                $payment = new Payment();
-                $payment->status = Payment::PAYMENT_STATUS_BET;
-                $payment->sum = '-' . self::MATCH_BANK;
-                $payment->player_id = $player->id;
-                $payment->match_id = $this->id;
-            }
+            $payment = new Payment();
+            $payment->status = Payment::PAYMENT_STATUS_BET;
+            $payment->sum = '-' . self::MATCH_BANK;
+            $payment->player_id = $player->id;
+            $payment->match_id = $this->id;
         }
     }
 }
