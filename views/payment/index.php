@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Payment;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\PaymentSearch */
@@ -23,15 +24,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'created_at',
-            'updated_at',
-            'player_id',
-            'match_id',
-            // 'sum',
-
+            'created_at:date',
+            [
+                'attribute' => 'player_id',
+                'value' => function ($data) {
+                    /** @var \app\models\Payment $data */
+                    return $data->player->name;
+                }
+            ],
+            'sum',
+            [
+                'attribute' => 'match_id',
+                'value' => function ($data) {
+                    /** @var \app\models\Payment $data */
+                    if ($data->match) {
+                        return Html::a($data->match->getMatchName('<br/>'), ['/match/view', 'id' => $data->match_id]);
+                    }
+                },
+                'format' => 'raw'
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

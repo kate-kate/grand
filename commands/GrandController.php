@@ -9,7 +9,7 @@ use yii\console\Controller;
 class GrandController extends Controller
 {
 
-    public function actionGeneratePairs ()
+    public function actionGeneratePairs()
     {
         Match::deleteAll();
         Pair::deleteAll();
@@ -55,6 +55,17 @@ class GrandController extends Controller
             $match->pair_id_2 = $pairs['pair2'];
             $match->save(false);
         }
-        echo count($matchesArray)."\n";
+        echo count($matchesArray) . "\n";
+    }
+
+    public function actionNineDecember()
+    {
+        $matches = Match::find()->where(['>', 'date', strtotime('09.12.2014')])->all();
+        foreach ($matches as $match) {
+            /** @var Match $match */
+            foreach($match->getPlayersModels() as $player) {
+                $match->takeCredits();
+            }
+        }
     }
 }

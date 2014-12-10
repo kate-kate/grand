@@ -59,10 +59,10 @@ class Payment extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'created_at' => 'Created At',
+            'created_at' => 'Date',
             'updated_at' => 'Updated At',
             'player_id' => 'Player',
-            'match_id' => 'Match ID',
+            'match_id' => 'Match',
             'sum' => 'Sum',
         ];
     }
@@ -111,5 +111,13 @@ class Payment extends \yii\db\ActiveRecord
             $player->save(false);
         }
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    public function afterDelete()
+    {
+        $player = Participant::findOne($this->player_id);
+        $player->balance -= $this->sum;
+        $player->save(false);
+        parent::afterDelete();
     }
 }

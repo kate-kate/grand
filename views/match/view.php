@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Match */
 
-$this->title = $model->id;
+$this->title = $model->getMatchName();
 $this->params['breadcrumbs'][] = ['label' => 'Matches', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -16,26 +16,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'pair_id_1',
-            'pair_id_2',
-            'winner_id',
+            'date:datetime',
             'status',
-            'date',
-            'part_winner_id_1',
-            'part_winner_id_2',
+            [
+                'attribute' => 'winner_id',
+                'value' => $model->winner->name
+            ],
+            [
+                'attribute' => 'score',
+                'value' => $model->winner_score . ' : ' . $model->looser_score
+            ]
         ],
     ]) ?>
 

@@ -62,17 +62,19 @@ class MatchController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if($model->status == Match::MATCH_STATUS_NOT_PLAYED) {
+            $model->scenario = Match::MATCH_SCENARIO_PLAY_GAME;
+        }
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             $model->score = $post['Match']['score'];
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**

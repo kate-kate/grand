@@ -47,6 +47,17 @@ $config = [
                 '/' => 'site/index'
             ],
         ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat' => 'php:d.m.Y',
+            'datetimeFormat' => 'php:d.m.Y H:i',
+            'timeZone' => 'Europe/Moscow',
+            //   'locale' => 'en-GB',
+            'numberFormatterOptions' => [
+                NumberFormatter::MIN_FRACTION_DIGITS => 2,
+                NumberFormatter::MAX_FRACTION_DIGITS => 2,
+            ]
+        ],
     ],
     'params' => $params,
 ];

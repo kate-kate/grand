@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\Payment;
 use Yii;
 
 /**
@@ -31,7 +32,9 @@ class Match extends \yii\db\ActiveRecord
     const MATCH_STATUS_PLAYED = 'played';
     const MATCH_STATUS_BLOCKED = 'blocked';
 
-    const MATCH_BANK = 500;
+    const MATCH_BANK = 5;
+
+    const MATCH_SCENARIO_PLAY_GAME = 'play_game';
 
     public $score;
 
@@ -52,7 +55,7 @@ class Match extends \yii\db\ActiveRecord
             [['pair_id_1', 'pair_id_2', 'winner_score', 'looser_score'], 'integer'],
             [['status'], 'string'],
             [['winner_id'], 'validateWinner'],
-            [['winner_id', 'winner_score', 'looser_score'], 'required'],
+            [['winner_id', 'winner_score'], 'required'],
         ];
     }
 
@@ -159,44 +162,37 @@ class Match extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        if (!$this->date) {
+        if ($this->scenario == self::MATCH_SCENARIO_PLAY_GAME) {
+            $this->status = self::MATCH_STATUS_PLAYED;
             $this->date = time();
-        }
-        if ($this->winner_id) {
-            if (!$this->looser_id) {
-                $this->looser_id = $this->winner_id == $this->pair_id_1 ? $this->pair_id_2 : $this->pair_id_1;
-            }
-            if ($this->status == self::MATCH_STATUS_NOT_PLAYED || $this->status == self::MATCH_STATUS_STARTED) {
-                $this->status = self::MATCH_STATUS_PLAYED;
-            }
-            if (!$this->part_winner_id_1) {
-                if ($this->pairOne->id == $this->winner_id) {
-                    $this->part_winner_id_1 = $this->pairOne->participantOne->id;
-                    $this->part_winner_id_2 = $this->pairOne->participantTwo->id;
-                }
+            $this->looser_id = $this->winner_id == $this->pair_id_1 ? $this->pair_id_2 : $this->pair_id_1;
+            if ($this->pairOne->id == $this->winner_id) {
+                $this->part_winner_id_1 = $this->pairOne->participantOne->id;
+                $this->part_winner_id_2 = $this->pairOne->participantTwo->id;
             } else {
-                if ($this->pairTwo->id == $this->winner_id) {
-                    $this->part_winner_id_1 = $this->pairTwo->participantOne->id;
-                    $this->part_winner_id_2 = $this->pairTwo->participantTwo->id;
-                }
+                $this->part_winner_id_1 = $this->pairTwo->participantOne->id;
+                $this->part_winner_id_2 = $this->pairTwo->participantTwo->id;
             }
+            if (!$this->looser_score) {
+                $this->looser_score = 0;
+            }
+            $this->takeCredits();
         }
         return parent::beforeSave($insert);
     }
 
-    public function makeBet()
+    public function takeCredits()
     {
-        $players = [];
-        $players[] = $this->pairOne->participantOne;
-        $players[] = $this->pairOne->participantTwo;
-        $players[] = $this->pairTwo->participantOne;
-        $players[] = $this->pairTwo->participantTwo;
+        $players = $this->getPlayersModels();
         foreach ($players as $player) {
-            $payment = new Payment();
-            $payment->status = Payment::PAYMENT_STATUS_BET;
-            $payment->sum = '-' . self::MATCH_BANK;
-            $payment->player_id = $player->id;
-            $payment->match_id = $this->id;
+            if (!Payment::findOne(['player_id' => $player->id, 'match_id' => $this->id])) {
+                $payment = new Payment();
+                $payment->status = Payment::PAYMENT_STATUS_BET;
+                $payment->sum = '-' . self::MATCH_BANK;
+                $payment->player_id = $player->id;
+                $payment->match_id = $this->id;
+                $payment->save();
+            }
         }
     }
 
@@ -212,5 +208,42 @@ class Match extends \yii\db\ActiveRecord
             }
         }
         parent::afterFind();
+    }
+
+    public function checkCredits()
+    {
+        $players = $this->getPlayersModels();
+        $creditable = true;
+        foreach ($players as $player) {
+            $creditable = $creditable && $player->balance >= self::MATCH_BANK;
+        }
+        return $creditable;
+    }
+
+    public function getUncreditablePlayers()
+    {
+        $players = $this->getPlayersModels();
+        $uncreditable = [];
+        foreach ($players as $player) {
+            if (!$player->balance >= self::MATCH_BANK) {
+                $uncreditable[] = $player->name;
+            }
+        }
+        return $uncreditable;
+    }
+
+    public function getPlayersModels()
+    {
+        $players = [];
+        $players[] = $this->pairOne->participantOne;
+        $players[] = $this->pairOne->participantTwo;
+        $players[] = $this->pairTwo->participantOne;
+        $players[] = $this->pairTwo->participantTwo;
+        return $players;
+    }
+
+    public function getMatchName($glue = ' - ')
+    {
+        return $this->pairOne->name . $glue . $this->pairTwo->name;
     }
 }
