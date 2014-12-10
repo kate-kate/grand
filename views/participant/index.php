@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Participant;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\ParticipantSearch */
@@ -19,7 +20,11 @@ $this->title = 'Participants';
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            'status',
+            [
+                'attribute' => 'status',
+                'filter' => Html::activeDropDownList($searchModel, 'status',
+                    Participant::getStatusesList(), ['class' => 'form-control'])
+            ],
             'balance',
             ['class' => 'yii\grid\ActionColumn', 'template' => '{update}'],
         ],

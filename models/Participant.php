@@ -74,4 +74,12 @@ class Participant extends \yii\db\ActiveRecord
         }
         return $playersList;
     }
+
+    public static function getStatusesList()
+    {
+        return [
+            'active' => 'Active',
+            'blocked' => 'Blocked',
+        ];
+    }
 }

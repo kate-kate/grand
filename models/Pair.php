@@ -32,7 +32,8 @@ class Pair extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['participant_id_1', 'participant_id_2'], 'integer']
+            [['name'], 'string'],
+            [['name'], 'required'],
         ];
     }
 
@@ -43,8 +44,9 @@ class Pair extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'participant_id_1' => 'Participant Id 1',
-            'participant_id_2' => 'Participant Id 2',
+            'participant_id_1' => 'Participant 1',
+            'participant_id_2' => 'Participant 2',
+            'name' => 'Alias'
         ];
     }
 
