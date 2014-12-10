@@ -22,7 +22,7 @@ use yii\behaviors\TimestampBehavior;
 class Payment extends \yii\db\ActiveRecord
 {
     const PAYMENT_STATUS_BALANCE_FILL = "balance filling";
-    const PAYMENT_STATUS_BET = "bet";
+    const PAYMENT_STATUS_CREDITS = "credit taking";
     const PAYMENT_SCENARIO_BALANCE_FILLING = "b_filling";
     const PAYMENT_SCENARIO_BALANCE_EDIT = "b_edit";
 
@@ -119,5 +119,11 @@ class Payment extends \yii\db\ActiveRecord
         $player->balance -= $this->sum;
         $player->save(false);
         parent::afterDelete();
+    }
+
+    public function getPaymentName()
+    {
+        $name = $this->player->name . ' ' . $this->status;
+        return $name;
     }
 }

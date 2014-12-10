@@ -187,7 +187,7 @@ class Match extends \yii\db\ActiveRecord
         foreach ($players as $player) {
             if (!Payment::findOne(['player_id' => $player->id, 'match_id' => $this->id])) {
                 $payment = new Payment();
-                $payment->status = Payment::PAYMENT_STATUS_BET;
+                $payment->status = Payment::PAYMENT_STATUS_CREDITS;
                 $payment->sum = '-' . self::MATCH_BANK;
                 $payment->player_id = $player->id;
                 $payment->match_id = $this->id;

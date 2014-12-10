@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Payment */
 
-$this->title = $model->id;
+$this->title = $model->getPaymentName();
 $this->params['breadcrumbs'][] = ['label' => 'Payments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -29,10 +29,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'created_at',
-            'updated_at',
-            'player_id',
-            'match_id',
+            'created_at:datetime',
+            'updated_at:datetime',
+            [
+                'attribute' => 'player_id',
+                'value' => $model->player->name
+            ],
+            'status',
+            [
+                'attribute' => 'match_id',
+                'value' => $model->match_id ? $model->match->getMatchName() : ''
+            ],
             'sum',
         ],
     ]) ?>

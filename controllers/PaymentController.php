@@ -61,7 +61,7 @@ class PaymentController extends Controller
     public function actionCreate()
     {
         $model = new Payment();
-
+        $model->scenario = Payment::PAYMENT_SCENARIO_BALANCE_FILLING;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

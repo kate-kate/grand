@@ -14,7 +14,7 @@ class m141208_155559_bank_table extends Migration
             'player_id' => 'integer',
             'match_id' => 'integer',
             'sum' => 'integer',
-            'status' => 'ENUM("balance filling", "bet")',
+            'status' => 'ENUM("balance filling", "credit taking")',
         ]);
         $this->addColumn('participant', 'balance', 'integer');
 

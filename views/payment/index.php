@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Payment;
+use app\models\Participant;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\PaymentSearch */
@@ -31,7 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) {
                     /** @var \app\models\Payment $data */
                     return $data->player->name;
-                }
+                },
+                'filter' => Html::activeDropDownList($searchModel, 'player_id', Participant::getAllPlayersList(),
+                    ['class' => 'form-control', 'prompt' => ''])
             ],
             'sum',
             [

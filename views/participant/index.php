@@ -20,6 +20,7 @@ $this->title = 'Participants';
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'status',
+            'balance',
             ['class' => 'yii\grid\ActionColumn', 'template' => '{update}'],
         ],
     ]); ?>
