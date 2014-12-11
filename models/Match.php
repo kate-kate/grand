@@ -46,6 +46,14 @@ class Match extends \yii\db\ActiveRecord
         return 'match';
     }
 
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_DEFAULT => ['winner_id'],
+            self::MATCH_SCENARIO_PLAY_GAME => ['winner_id'],
+        ];
+    }
+
     /**
      * @inheritdoc
      */

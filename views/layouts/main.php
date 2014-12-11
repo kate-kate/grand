@@ -39,6 +39,7 @@ AppAsset::register($this);
             ['label' => 'Matches', 'url' => ['/match/index']],
             ['label' => 'Pairs', 'url' => ['/pair/index']],
             ['label' => 'Participants', 'url' => ['/participant/index']],
+            ['label' => 'Statistics', 'url' => ['/statistics/index']],
             ['label' => 'Payments', 'url' => ['/payment/index']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :

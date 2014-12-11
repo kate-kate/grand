@@ -97,3 +97,25 @@ a.desc:after {
 .table > tbody > tr > td .looser {
     color: #858585;
 }
+
+.leaders {
+    color: #CC0000;
+}
+
+.great-five {
+    color: #FF8000;
+}
+
+.good-ten {
+    color: #009113;
+}
+
+.statistics-sheet > div {
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
+.statistics-sheet h4 {
+    margin-top: 35px;
+    margin-bottom: 25px;
+}

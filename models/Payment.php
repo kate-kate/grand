@@ -41,6 +41,14 @@ class Payment extends \yii\db\ActiveRecord
         ];
     }
 
+    public function scenarios()
+    {
+        return [
+            self::PAYMENT_SCENARIO_BALANCE_FILLING => ['player_id', 'sum'],
+            self::SCENARIO_DEFAULT => ['player_id', 'sum']
+        ];
+    }
+
     /**
      * @inheritdoc
      */
