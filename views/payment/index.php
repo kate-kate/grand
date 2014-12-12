@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'id',
             'created_at:date',
             [
                 'attribute' => 'player_id',
@@ -37,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'form-control', 'prompt' => ''])
             ],
             'sum',
+            'status',
             [
                 'attribute' => 'match_id',
                 'value' => function ($data) {

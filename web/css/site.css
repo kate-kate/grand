@@ -98,15 +98,20 @@ a.desc:after {
     color: #858585;
 }
 
-.leaders {
+.statistics-sheet a {
+    cursor: pointer;
+    color: #333;
+}
+
+.leaders, .leaders a {
     color: #CC0000;
 }
 
-.great-five {
+.great-five, .great-five a {
     color: #FF8000;
 }
 
-.good-ten {
+.good-ten, .good-ten a {
     color: #009113;
 }
 

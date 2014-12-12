@@ -104,4 +104,13 @@ class StatisticsController extends Controller
         ]);
     }
 
+    public function actionGames($id, $type = 'pair')
+    {
+        if ($type = 'pair') {
+            $games = Match::findAll(['or', 'pair_id_1=' . $id, 'pair_id_2=' . $id]);
+            $player = Pair::findOne($id);
+        }
+        return $this->render('games', ['games' => $games, 'player' => $player]);
+    }
+
 }

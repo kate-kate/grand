@@ -31,7 +31,13 @@
             },
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-                'name',
+                [
+                    'attribute' => 'name',
+                    'value' => function ($data) {
+                        return \yii\helpers\Html::a($data['name']);
+                    },
+                    'format' => 'raw'
+                ],
                 'wins',
                 'matches',
                 'score',
