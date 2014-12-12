@@ -34,7 +34,7 @@
                 [
                     'attribute' => 'name',
                     'value' => function ($data) {
-                        return \yii\helpers\Html::a($data['name']);
+                        return \yii\helpers\Html::a($data['name'], ['/statistics/games', 'id' => $data['id']]);
                     },
                     'format' => 'raw'
                 ],
