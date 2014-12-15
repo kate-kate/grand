@@ -26,11 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             [
                 'attribute' => 'winner_id',
-                'value' => $model->winner->name
+                'value' => $model->winner ? $model->winner->name : null
             ],
             [
                 'attribute' => 'score',
-                'value' => $model->winner_score . ' : ' . $model->looser_score
+                'value' => $model->winner ? $model->winner_score . ' : ' . $model->looser_score : null
             ]
         ],
     ]) ?>
