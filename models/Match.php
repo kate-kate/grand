@@ -159,10 +159,10 @@ class Match extends \yii\db\ActiveRecord
         if ($this->score) {
             if ($this->score[$this->pairOne->id] > $this->score[$this->pairTwo->id]) {
                 $this->winner_score = $this->score[$this->pairOne->id];
-                $this->looser_id = $this->score[$this->pairTwo->id];
+                $this->looser_score = $this->score[$this->pairTwo->id];
             } else {
                 $this->winner_score = $this->score[$this->pairTwo->id];
-                $this->looser_id = $this->score[$this->pairOne->id];
+                $this->looser_score = $this->score[$this->pairOne->id];
             }
         }
         return parent::beforeValidate();
