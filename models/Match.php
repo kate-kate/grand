@@ -173,13 +173,14 @@ class Match extends \yii\db\ActiveRecord
         if ($this->scenario == self::MATCH_SCENARIO_PLAY_GAME) {
             $this->status = self::MATCH_STATUS_PLAYED;
             $this->date = time();
-            $this->looser_id = $this->winner_id == $this->pair_id_1 ? $this->pair_id_2 : $this->pair_id_1;
             if ($this->pairOne->id == $this->winner_id) {
                 $this->part_winner_id_1 = $this->pairOne->participantOne->id;
                 $this->part_winner_id_2 = $this->pairOne->participantTwo->id;
+                $this->looser_id = $this->pairTwo->id;
             } else {
                 $this->part_winner_id_1 = $this->pairTwo->participantOne->id;
                 $this->part_winner_id_2 = $this->pairTwo->participantTwo->id;
+                $this->looser_id = $this->pairOne->id;
             }
             if (!$this->looser_score) {
                 $this->looser_score = 0;
