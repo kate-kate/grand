@@ -17,9 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Fill up the balance', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <? if (!Yii::$app->user->isGuest): ?>
+        <p>
+            <?= Html::a('Fill up the balance', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+
+    <? endif ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -47,7 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'format' => 'raw'
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => Yii::$app->user->isGuest ? '{view}' : '{view} {update} {delete}'
+            ],
         ],
     ]); ?>
 

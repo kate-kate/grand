@@ -6,7 +6,9 @@ use app\models\Match;
 use app\models\Pair;
 use app\models\Participant;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
+use yii\db\Query;
 use yii\web\Controller;
 
 class StatisticsController extends Controller
@@ -104,13 +106,84 @@ class StatisticsController extends Controller
         ]);
     }
 
-    public function actionGames($id, $type = 'pair')
+    public function actionPairGames($id)
     {
-        if ($type = 'pair') {
-            $games = Match::findAll(['or', 'pair_id_1=' . $id, 'pair_id_2=' . $id]);
-            $player = Pair::findOne($id);
-        }
-        return $this->render('games', ['games' => $games, 'player' => $player]);
+        $gamesPlayed = Match::find()->where([
+            'and',
+            'status="' . Match::MATCH_STATUS_PLAYED . '"',
+            ['or', 'pair_id_1=' . $id, 'pair_id_2=' . $id]
+        ]);
+        $gamesLeft = Match::find()->where([
+            'and',
+            'status="' . Match::MATCH_STATUS_NOT_PLAYED . '"',
+            ['or', 'pair_id_1=' . $id, 'pair_id_2=' . $id]
+        ]);
+        $player = Pair::findOne($id);
+        $gamesPlayedProvider = new ActiveDataProvider([
+            'query' => $gamesPlayed
+        ]);
+        $gamesLeftProvider = new ActiveDataProvider([
+            'query' => $gamesLeft
+        ]);
+        return $this->render('pair-games', [
+            'gamesPlayedProvider' => $gamesPlayedProvider,
+            'gamesLeftProvider' => $gamesLeftProvider,
+            'player' => $player
+        ]);
+    }
+
+    public function actionPlayerGames($id)
+    {
+        $gamesPlayed = Match::find()->where([
+            'and',
+            'status="' . Match::MATCH_STATUS_PLAYED . '"',
+            [
+                'or',
+                [
+                    'in',
+                    'pair_id_1',
+                    (new Query())->select('id')->from('pair')
+                        ->where(['or', 'participant_id_1=' . $id, 'participant_id_2=' . $id])
+                ],
+                [
+                    'in',
+                    'pair_id_2',
+                    (new Query())->select('id')->from('pair')
+                        ->where(['or', 'participant_id_1=' . $id, 'participant_id_2=' . $id])
+                ]
+            ]
+        ]);
+        $gamesLeft = Match::find()->where([
+            'and',
+            'status="' . Match::MATCH_STATUS_NOT_PLAYED . '"',
+            [
+                'or',
+                [
+                    'in',
+                    'pair_id_1',
+                    (new Query())->select('id')->from('pair')
+                        ->where(['or', 'participant_id_1=' . $id, 'participant_id_2=' . $id])
+                ],
+                [
+                    'in',
+                    'pair_id_2',
+                    (new Query())->select('id')->from('pair')
+                        ->where(['or', 'participant_id_1=' . $id, 'participant_id_2=' . $id])
+                ]
+            ]
+        ]);
+        $player = Participant::findOne($id);
+        $gamesPlayedProvider = new ActiveDataProvider([
+            'query' => $gamesPlayed
+        ]);
+        $gamesLeftProvider = new ActiveDataProvider([
+            'query' => $gamesLeft
+        ]);
+        return $this->render('player-games', [
+            'gamesPlayedProvider' => $gamesPlayedProvider,
+            'gamesLeftProvider' => $gamesLeftProvider,
+            'player' => $player
+        ]);
     }
 
 }

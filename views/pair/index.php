@@ -39,7 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update}'
+                'template' => '{update}',
+                'visible' => !Yii::$app->user->isGuest
             ],
         ],
     ]); ?>

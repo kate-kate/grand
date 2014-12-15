@@ -1,27 +1,16 @@
-<?php
-
+<?
+use app\models\Match;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use app\models\Match;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\search\MatchSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Matches';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="match-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
-
+<div class="statistics-sheet">
+    <h4>Games Played by <?= $player->name ?></h4>
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'dataProvider' => $gamesPlayedProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'date:datetime',
+            'date:date',
             [
                 'attribute' => 'pair_id_1',
                 'label' => 'Pair One',
@@ -70,16 +59,34 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            'status',
-            // 'date',
-            // 'part_winner_id_1',
-            // 'part_winner_id_2',
+        ]
+    ]) ?>
 
+    <h4>Games Left</h4>
+    <?= GridView::widget([
+        'dataProvider' => $gamesLeftProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
             [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => Yii::$app->user->isGuest ? '{view}' : '{update} {view}'
+                'attribute' => 'pair_id_1',
+                'label' => 'Pair One',
+                'value' => function ($data) {
+                    /**
+                     * @var Match $data
+                     */
+                    return $data->pairOne->name;
+                },
+                'format' => 'raw'
             ],
-        ],
-    ]); ?>
+            [
+                'attribute' => 'pair_id_2',
+                'label' => 'Pair Two',
+                'value' => function ($data) {
+                    return $data->pairTwo->name;
+                },
+                'format' => 'raw'
+            ],
+        ]
+    ]) ?>
 
 </div>

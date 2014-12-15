@@ -26,7 +26,11 @@ $this->title = 'Participants';
                     Participant::getStatusesList(), ['class' => 'form-control'])
             ],
             'balance',
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{update}'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update}',
+                'visible' => !Yii::$app->user->isGuest
+            ],
         ],
     ]); ?>
 

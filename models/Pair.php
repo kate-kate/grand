@@ -73,4 +73,9 @@ class Pair extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Participant::className(), ['id' => 'participant_id_1']);
     }
+
+    public function getAlias()
+    {
+        return $this->participantOne->name . ' & ' . $this->participantTwo->name;
+    }
 }

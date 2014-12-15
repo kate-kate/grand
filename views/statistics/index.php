@@ -34,7 +34,7 @@
                 [
                     'attribute' => 'name',
                     'value' => function ($data) {
-                        return \yii\helpers\Html::a($data['name'], ['/statistics/games', 'id' => $data['id']]);
+                        return \yii\helpers\Html::a($data['name'], ['/statistics/pair-games', 'id' => $data['id']]);
                     },
                     'format' => 'raw'
                 ],
@@ -60,7 +60,13 @@
             },
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-                'name',
+                [
+                    'attribute' => 'name',
+                    'value' => function ($data) {
+                        return \yii\helpers\Html::a($data['name'], ['/statistics/pair-games', 'id' => $data['id']]);
+                    },
+                    'format' => 'raw'
+                ],
                 'percent',
                 'matches'
             ]
@@ -85,7 +91,13 @@
             },
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-                'name',
+                [
+                    'attribute' => 'name',
+                    'value' => function ($data) {
+                        return \yii\helpers\Html::a($data['name'], ['/statistics/player-games', 'id' => $data['id']]);
+                    },
+                    'format' => 'raw'
+                ],
                 'wins',
                 'matches',
                 'score',

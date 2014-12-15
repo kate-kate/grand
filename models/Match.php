@@ -254,4 +254,10 @@ class Match extends \yii\db\ActiveRecord
     {
         return $this->pairOne->name . $glue . $this->pairTwo->name;
     }
+
+    public function getOpponents($id)
+    {
+        $opponent = $id == $this->pairOne->id ? $this->pairTwo->name : $this->pairOne->name;
+        return $opponent;
+    }
 }
