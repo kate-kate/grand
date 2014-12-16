@@ -90,11 +90,11 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
-.table > tbody > tr > td .winner {
+.table > tbody > tr > td .winner, span.winner {
     color: #0F9100;
 }
 
-.table > tbody > tr > td .looser {
+.table > tbody > tr > td .looser, span.looser {
     color: #858585;
 }
 
