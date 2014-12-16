@@ -13,8 +13,17 @@
             ],
             [
                 'attribute' => 'winner',
+                'value' => function ($data) use ($player) {
+                    return \yii\helpers\Html::tag('span', $data->winner->name, [
+                        'class' => $player->id == $data->winner_id ? 'winner' : ''
+                    ]);
+                },
+                'format' => 'raw'
+            ],
+            [
+                'attribute' => 'score',
                 'value' => function ($data) {
-                    return $data->winner->name;
+                    return $data->winner_score . ' : ' . $data->looser_score;
                 }
             ]
         ]

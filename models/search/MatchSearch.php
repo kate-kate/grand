@@ -52,6 +52,10 @@ class MatchSearch extends Match
             'query' => $query,
         ]);
 
+//        $query->with('pairOne', 'pairTwo');
+//        $query->addSelect('COUNT(pair_one_matches_played) + COUNT(pair_two_matches_played) as matches_index');
+//        $query->orderBy('matches_index');
+
         if (!($this->load($params) && $this->validate())) {
             $this->filterPlayers($query, array_keys($this->getPlayersList()));
             return $dataProvider;

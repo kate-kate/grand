@@ -78,4 +78,9 @@ class Pair extends \yii\db\ActiveRecord
     {
         return $this->participantOne->name . ' & ' . $this->participantTwo->name;
     }
+
+    public function getFullName()
+    {
+        return $this->name . ' (' . $this->getAlias() . ')';
+    }
 }

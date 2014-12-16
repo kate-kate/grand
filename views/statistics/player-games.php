@@ -18,7 +18,7 @@ use yii\grid\GridView;
                     /**
                      * @var Match $data
                      */
-                    $content = $data->pairOne->name;
+                    $content = $data->pairOne->getFullName();
                     if ($data->status == Match::MATCH_STATUS_PLAYED) {
                         $content = Html::tag('span', $content,
                             ['class' => $data->pairOne->id == $data->winner->id ? 'winner' : 'looser']);
@@ -34,7 +34,7 @@ use yii\grid\GridView;
                     /**
                      * @var Match $data
                      */
-                    $content = $data->pairTwo->name;
+                    $content = $data->pairTwo->getFullName();
                     if ($data->status == Match::MATCH_STATUS_PLAYED) {
                         $content = Html::tag('span', $content,
                             ['class' => $data->pairTwo->id == $data->winner->id ? 'winner' : 'looser']);
@@ -74,7 +74,7 @@ use yii\grid\GridView;
                     /**
                      * @var Match $data
                      */
-                    return $data->pairOne->name;
+                    return $data->pairOne->getFullName();
                 },
                 'format' => 'raw'
             ],
@@ -82,7 +82,7 @@ use yii\grid\GridView;
                 'attribute' => 'pair_id_2',
                 'label' => 'Pair Two',
                 'value' => function ($data) {
-                    return $data->pairTwo->name;
+                    return $data->pairTwo->getFullName();
                 },
                 'format' => 'raw'
             ],
