@@ -18,7 +18,7 @@ class ActivityService extends Component implements BootstrapInterface
     {
         Event::on(Match::className(), BaseActiveRecord::EVENT_AFTER_UPDATE, [$this, 'create']);
         Event::on(Pair::className(), BaseActiveRecord::EVENT_AFTER_UPDATE, [$this, 'create']);
-//        Event::on(Payment::className(), BaseActiveRecord::EVENT_AFTER_UPDATE, [$this, 'create']);
+        Event::on(Payment::className(), BaseActiveRecord::EVENT_AFTER_UPDATE, [$this, 'create']);
         Event::on(Payment::className(), BaseActiveRecord::EVENT_AFTER_INSERT, [$this, 'create']);
 //        Event::on(Pair::className(), BaseActiveRecord::EVENT_AFTER_UPDATE, [$this, 'create']);
     }

@@ -8,4 +8,4 @@ $this->title = 'Public activities';
     'dataProvider' => $provider,
     'itemView' => '_view',
     'layout' => "{items}\n{pager}",
-])?>
+]) ?>
