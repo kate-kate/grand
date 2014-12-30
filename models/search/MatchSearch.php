@@ -60,7 +60,7 @@ class MatchSearch extends Match
             $this->filterPlayers($query, array_keys($this->getPlayersList()));
             return $dataProvider;
         }
-        if ($this->status == Match::MATCH_STATUS_NOT_PLAYED && $this->players) {
+        if ($this->players) {
             $this->filterPlayers($query, $this->players);
         }
         $query->andFilterWhere([
@@ -81,7 +81,7 @@ class MatchSearch extends Match
     public function getPlayersList($withBalance = true)
     {
         $players = $this->getPlayersQuery($withBalance);
-        $players = $players->all();
+        $players = $players->orderBy(['name' => SORT_ASC])->all();
         $list = array();
         foreach ($players as $player) {
             $list[$player->id] = $player->name;
@@ -91,7 +91,7 @@ class MatchSearch extends Match
 
     public function getPlayersQuery($withBalance = true)
     {
-        $query = Participant::find()->where('status="active"');
+        $query = Participant::find()->where(['status' => 'active']);
         if ($withBalance) {
             $query->andWhere('balance>=:b', [':b' => Match::MATCH_BANK]);
         }
@@ -102,10 +102,14 @@ class MatchSearch extends Match
     {
         $allPlayers = array_keys($this->getPlayersList(false));
         $cantPlay = array_diff($allPlayers, $players);
-        $pairs = (new Query())->select('id')->from('pair')
-            ->andFilterWhere(['not in', 'participant_id_1', $cantPlay])
-            ->andFilterWhere(['not in', 'participant_id_2', $cantPlay]);
-
-        $query->andFilterWhere(['in', 'pair_id_1', $pairs])->andFilterWhere(['in', 'pair_id_2', $pairs]);
+        $pairs = (new Query())->select('id')->from('pair');
+        if (count($players) > 3) {
+            $pairs->andFilterWhere(['not in', 'participant_id_1', $cantPlay])
+                  ->andFilterWhere(['not in', 'participant_id_2', $cantPlay]);
+            $query->andFilterWhere(['in', 'pair_id_1', $pairs])->andFilterWhere(['in', 'pair_id_2', $pairs]);
+        } else {
+            $pairs->andFilterWhere(['or', ['in', 'participant_id_1', $players], ['in', 'participant_id_2', $players]]);
+            $query->andFilterWhere(['or', ['in', 'pair_id_1', $pairs], ['in', 'pair_id_2', $pairs]]);
+        }   
     }
 }
