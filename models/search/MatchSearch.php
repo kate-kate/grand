@@ -91,9 +91,9 @@ class MatchSearch extends Match
 
     public function getPlayersQuery($withBalance = true)
     {
-        $query = Participant::find()->where(['status' => 'active']);
+        $query = Participant::find()->where(['status' => Participant::STATUS_ACTIVE]);
         if ($withBalance) {
-            $query->andWhere('balance>=:b', [':b' => Match::MATCH_BANK]);
+            $query->andWhere('balance >= :b', [':b' => Match::MATCH_BANK]);
         }
         return $query;
     }

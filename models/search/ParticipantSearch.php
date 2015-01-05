@@ -18,7 +18,6 @@ class ParticipantSearch extends Participant
     public function rules()
     {
         return [
-            [['id'], 'integer'],
             [['name', 'status'], 'safe'],
         ];
     }

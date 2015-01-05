@@ -17,7 +17,7 @@ class StatisticsController extends Controller
     public function actionIndex()
     {
         $played = Match::find()->where(['status' => Match::MATCH_STATUS_PLAYED])->count();
-        $all = Match::find()->count();
+        $all = Match::find()->where(['status' => [Match::MATCH_STATUS_PLAYED, Match::MATCH_STATUS_NOT_PLAYED]])->count();
         $percent = round($played / ($all / 100), 2);
 
         $pairsQuery = Pair::find()->select([

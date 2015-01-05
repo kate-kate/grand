@@ -51,16 +51,19 @@ class ParticipantController extends Controller
     {
         if (!Yii::$app->user->isGuest) {
             $model = $this->findModel($id);
+            if ($model->status === Participant::STATUS_BLOCKED) {
+                return $this->redirect(['index']);
+            }
 
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             } else {
                 return $this->render('update', [
                     'model' => $model,
                 ]);
             }
         } else {
-            $this->redirect('index');
+            return $this->redirect(['index']);
         }
     }
 

@@ -31,6 +31,7 @@ class Match extends \yii\db\ActiveRecord
     const MATCH_STATUS_NOT_PLAYED = 'not-played';
     const MATCH_STATUS_PLAYED = 'played';
     const MATCH_STATUS_BLOCKED = 'blocked';
+    const MATCH_STATUS_BLOCK_PLAYED = 'block-played';
 
     const MATCH_BANK = 5;
 
@@ -143,9 +144,10 @@ class Match extends \yii\db\ActiveRecord
     public function getStatuses()
     {
         return [
-            'not-played' => 'not-played',
-            'played' => 'played',
-            'blocked' => 'blocked'
+            self::MATCH_STATUS_NOT_PLAYED => 'Not played',
+            self::MATCH_STATUS_PLAYED => 'Played',
+            self::MATCH_STATUS_BLOCK_PLAYED => 'Block played',
+            self::MATCH_STATUS_BLOCKED => 'Blocked',
         ];
     }
 
@@ -260,5 +262,23 @@ class Match extends \yii\db\ActiveRecord
     {
         $opponent = $id == $this->pairOne->id ? $this->pairTwo->name : $this->pairOne->name;
         return $opponent;
+    }
+    
+    public static function blockByParticipant($id)
+    {
+        $pairs = Pair::find()->select(['id'])->where(
+            'participant_id_1 = :id OR participant_id_2 = :id', [':id' => $id]
+        )->createCommand()->queryColumn();
+        
+        static::updateAll(['status' => self::MATCH_STATUS_BLOCKED], ['and', 
+            'status = :not_played', 
+            ['or', ['in', 'pair_id_1', $pairs], ['in', 'pair_id_2', $pairs]]
+        ], [':not_played' => self::MATCH_STATUS_NOT_PLAYED]);
+        
+        static::updateAll(['status' => self::MATCH_STATUS_BLOCK_PLAYED], ['and', 
+            'status = :played', 
+            ['or', ['in', 'pair_id_1', $pairs], ['in', 'pair_id_2', $pairs]]
+        ], [':played' => self::MATCH_STATUS_PLAYED]);
+            
     }
 }

@@ -13,7 +13,7 @@ use app\models\Participant;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'player_id')->dropDownList(Participant::getAllPlayersList(), ['prompt' => '']) ?>
+    <?= $form->field($model, 'player_id')->dropDownList(Participant::getAllPlayersList(true), ['prompt' => '']) ?>
 
     <?= $form->field($model, 'sum')->textInput() ?>
 

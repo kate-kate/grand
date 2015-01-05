@@ -18,6 +18,8 @@ use yii\db\Query;
  */
 class Participant extends \yii\db\ActiveRecord
 {
+    const STATUS_ACTIVE = 'active';
+    const STATUS_BLOCKED = 'blocked';
     /**
      * @inheritdoc
      */
@@ -64,12 +66,28 @@ class Participant extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Pair::className(), ['participant_id_1' => 'id']);
     }
-
-    public static function getAllPlayersList()
+    
+    public function afterSave($insert, $changedAttributes)
     {
-        $playersQuery = (new Query())->select(['id', 'name'])->from('participant')->all();
+        if (!$insert) {
+            if ($this->status === self::STATUS_BLOCKED && 
+                isset($changedAttributes['status']) && 
+                $changedAttributes['status'] === self::STATUS_ACTIVE
+            ) {
+                Match::blockByParticipant($this->id);
+            }
+        }
+        return parent::afterSave($insert, $changedAttributes);
+    }
+
+    public static function getAllPlayersList($onlyActive = false)
+    {
+        $playersQuery = (new Query())->select(['id', 'name'])->from('participant');
+        if ($onlyActive) {
+            $playersQuery->where(['status' => self::STATUS_ACTIVE]);
+        }
         $playersList = [];
-        foreach ($playersQuery as $playerRow) {
+        foreach ($playersQuery->all() as $playerRow) {
             $playersList[$playerRow['id']] = $playerRow['name'];
         }
         return $playersList;
@@ -78,8 +96,8 @@ class Participant extends \yii\db\ActiveRecord
     public static function getStatusesList()
     {
         return [
-            'active' => 'Active',
-            'blocked' => 'Blocked',
+            self::STATUS_ACTIVE  => 'Active',
+            self::STATUS_BLOCKED => 'Blocked',
         ];
     }
 }
