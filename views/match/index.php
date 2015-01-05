@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                      * @var Match $data
                      */
                     $content = $data->pairOne->getFullName();
-                    if ($data->status == Match::MATCH_STATUS_PLAYED) {
+                    if (in_array($data->status, [Match::MATCH_STATUS_PLAYED, Match::MATCH_STATUS_BLOCK_PLAYED])) {
                         $content = Html::tag('span', $content,
                             ['class' => $data->pairOne->id == $data->winner->id ? 'winner' : 'looser']);
                     }
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                      * @var Match $data
                      */
                     $content = $data->pairTwo->getFullName();
-                    if ($data->status == Match::MATCH_STATUS_PLAYED) {
+                    if (in_array($data->status, [Match::MATCH_STATUS_PLAYED, Match::MATCH_STATUS_BLOCK_PLAYED])) {
                         $content = Html::tag('span', $content,
                             ['class' => $data->pairTwo->id == $data->winner->id ? 'winner' : 'looser']);
                     }
@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     /**
                      * @var Match $data
                      */
-                    if ($data->status == Match::MATCH_STATUS_PLAYED) {
+                    if (in_array($data->status, [Match::MATCH_STATUS_PLAYED, Match::MATCH_STATUS_BLOCK_PLAYED])) {
                         if ($data->winner_id == $data->pair_id_1) {
                             $content = $data->winner_score . ' : ' . $data->looser_score;
                         } else {
@@ -70,7 +70,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            'status',
+            [
+                'attribute' => 'status',
+                'filter' => $searchModel->getStatuses(),
+            ],
             // 'date',
             // 'part_winner_id_1',
             // 'part_winner_id_2',
